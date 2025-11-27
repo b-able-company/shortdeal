@@ -1,0 +1,14 @@
+# Django
+Django==4.2.17
+psycopg2-binary==2.9.9
+python-dotenv==1.0.0
+
+# Frontend
+django-bootstrap5==24.3
+
+# Utils
+Pillow==10.4.0
+django-extensions==3.2.3
+
+# Development
+django-debug-toolbar==4.4.6

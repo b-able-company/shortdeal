@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ShortDeal{% endblock %}</title>
+
+    {% load django_bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% include 'includes/navbar.html' %}
+
+    <main class="container mt-4">
+        {% include 'includes/messages.html' %}
+
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="container mt-5 mb-3 text-center text-muted">
+        <p>&copy; 2025 ShortDeal. All rights reserved.</p>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

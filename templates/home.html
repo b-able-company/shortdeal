@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}홈 - ShortDeal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 text-center my-5">
+        <h1 class="display-4">ShortDeal</h1>
+        <p class="lead">숏폼 콘텐츠 거래 플랫폼</p>
+        <hr class="my-4">
+
+        {% if user.is_authenticated %}
+            <p>환영합니다, {{ user.username }}님! ({{ user.get_role_display }})</p>
+            <a href="{% url 'admin:index' %}" class="btn btn-primary">관리자 페이지</a>
+        {% else %}
+            <p>로그인하여 ShortDeal을 시작하세요.</p>
+            <a href="{% url 'admin:index' %}" class="btn btn-primary">로그인</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">제작사</h5>
+                <p class="card-text">숏폼 콘텐츠를 등록하고 판매하세요.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">바이어</h5>
+                <p class="card-text">다양한 숏폼 콘텐츠를 구매하세요.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">거래</h5>
+                <p class="card-text">안전하고 투명한 거래를 진행하세요.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
