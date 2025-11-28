@@ -95,6 +95,7 @@ Always perform these 3 validations BEFORE writing code:
    - Verify against `/docs/ia.md`: URL structure, access permissions, page flow
    - Verify against `/docs/func-spec.md`: Feature ID, input fields, validation rules, business logic
    - Verify against `/docs/api-spec.md`: API endpoints, request/response formats, status codes
+   - Verify against `/docs/permissions.md`: Required permission classes, role restrictions
    - Report any conflicts or missing information between documents
 
 3. **Data Model Validation**
