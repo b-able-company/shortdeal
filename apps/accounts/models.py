@@ -28,6 +28,16 @@ class User(AbstractUser):
     # Genre tags (for creators only)
     genre_tags = models.JSONField(default=list, blank=True, verbose_name='Genre tags')
 
+    # Booth slug (for creators only, auto-set by signal)
+    booth_slug = models.CharField(
+        max_length=100,
+        unique=True,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name='Booth slug'
+    )
+
     # Contact information
     phone = models.CharField(max_length=20, blank=True, verbose_name='Phone number')
 
