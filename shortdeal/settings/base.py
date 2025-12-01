@@ -141,8 +141,10 @@ SIMPLE_JWT = {
 
 # CORS Settings
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',  # Frontend dev server
+    'http://localhost:3000',  # Frontend dev server (React)
     'http://127.0.0.1:3000',
+    'http://localhost:5173',  # Frontend dev server (Vite)
+    'http://127.0.0.1:5173',
 ]
 CORS_ALLOW_CREDENTIALS = True
 
