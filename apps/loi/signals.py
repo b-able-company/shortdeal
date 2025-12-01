@@ -16,7 +16,15 @@ def create_loi_on_offer_accept(sender, instance, **kwargs):
     # Only create LOI if offer was just accepted and LOI doesn't exist
     if instance.status == 'accepted' and not hasattr(instance, 'loi'):
         try:
-            LOI.create_from_offer(instance)
+            loi = LOI.create_from_offer(instance)
+
+            # Send email notification to both parties (NTF-004)
+            from apps.notifications.emails import send_loi_created_notification
+            try:
+                send_loi_created_notification(loi)
+            except Exception:
+                pass  # Don't fail LOI creation if email fails
+
         except Exception:
             # LOI already exists or creation failed
             pass

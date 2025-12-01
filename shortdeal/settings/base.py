@@ -108,6 +108,7 @@ LOGOUT_REDIRECT_URL = 'home'
 
 # Email (기본값, 환경별로 오버라이드)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'noreply@shortdeal.com'
 
 # Django REST Framework
 REST_FRAMEWORK = {

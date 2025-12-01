@@ -147,6 +147,13 @@ class Offer(models.Model):
         self.producer_response = producer_response
         self.save(update_fields=['status', 'responded_at', 'producer_response', 'updated_at'])
 
+        # Send email notification (NTF-002)
+        from apps.notifications.emails import send_offer_accepted_notification
+        try:
+            send_offer_accepted_notification(self)
+        except Exception:
+            pass  # Don't fail offer acceptance if email fails
+
     def reject(self, producer_response=''):
         """Reject this offer"""
         if self.status != OFFER_STATUS_PENDING:
@@ -156,6 +163,13 @@ class Offer(models.Model):
         self.responded_at = timezone.now()
         self.producer_response = producer_response
         self.save(update_fields=['status', 'responded_at', 'producer_response', 'updated_at'])
+
+        # Send email notification (NTF-003)
+        from apps.notifications.emails import send_offer_rejected_notification
+        try:
+            send_offer_rejected_notification(self)
+        except Exception:
+            pass  # Don't fail offer rejection if email fails
 
     def mark_as_expired(self):
         """Mark offer as expired (called by scheduled task)"""

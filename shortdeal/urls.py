@@ -16,6 +16,8 @@ urlpatterns = [
     path('api/v1/studio/contents/', include('apps.contents.studio_urls')),
     path('api/v1/offers/', include('apps.offers.api_urls')),
     path('api/v1/loi/', include('apps.loi.api_urls')),
+    path('api/v1/settings/', include('apps.accounts.settings_urls')),
+    path('api/v1/admin/', include('apps.core.admin_urls')),
 
     # Template-based URLs (session-based, for testing)
     path('accounts/', include('apps.accounts.urls')),
