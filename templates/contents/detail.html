@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ content.title }} - ShortDeal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Thumbnail (CNT-001) -->
+        <div class="card mb-4">
+            {% if content.thumbnail %}
+                <img src="{{ content.thumbnail.url }}"
+                     class="card-img-top"
+                     alt="{{ content.title }}"
+                     style="width: 100%; aspect-ratio: 16/9; object-fit: cover;">
+            {% else %}
+                <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center"
+                     style="aspect-ratio: 16/9;">
+                    <span class="text-white fs-4">No Thumbnail</span>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Title and Basic Info (CNT-001) -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h1 class="card-title mb-3">{{ content.title }}</h1>
+
+                <!-- Genre Tags -->
+                <div class="mb-3">
+                    {% for genre in content.genre_tags %}
+                    <span class="badge bg-primary">{{ genre }}</span>
+                    {% endfor %}
+                </div>
+
+                <!-- Metadata -->
+                <div class="row mb-3">
+                    <div class="col-sm-6">
+                        <small class="text-muted">Price:</small>
+                        <p class="mb-0">
+                            <strong class="fs-4 text-primary">${{ content.price|floatformat:0 }} {{ content.currency }}</strong>
+                        </p>
+                    </div>
+                    <div class="col-sm-6">
+                        <small class="text-muted">Published:</small>
+                        <p class="mb-0">{{ content.created_at|date:"Y-m-d" }}</p>
+                    </div>
+                </div>
+
+                <!-- Duration and Views -->
+                <div class="row mb-3">
+                    <div class="col-sm-6">
+                        <small class="text-muted">Duration:</small>
+                        <p class="mb-0">{{ content.duration_seconds }} seconds</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <small class="text-muted">Views:</small>
+                        <p class="mb-0">{{ content.view_count }}</p>
+                    </div>
+                </div>
+
+                <!-- Description/Synopsis (CNT-001) -->
+                <div class="mb-3">
+                    <h5>Synopsis</h5>
+                    <p class="text-justify" style="white-space: pre-wrap;">{{ content.description }}</p>
+                </div>
+
+                <!-- Content Link (CNT-003) -->
+                {% if content.video_url %}
+                <div class="mb-3">
+                    <a href="{{ content.video_url }}" target="_blank" class="btn btn-outline-primary">
+                        <i class="bi bi-play-circle"></i> Watch Preview
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <!-- Producer Info (CNT-002) -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Producer</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    {% if content.producer.logo %}
+                        <img src="{{ content.producer.logo.url }}"
+                             alt="{{ content.producer.company_name }}"
+                             class="rounded-circle me-3"
+                             style="width: 60px; height: 60px; object-fit: cover;">
+                    {% else %}
+                        <div class="rounded-circle bg-secondary me-3 d-flex align-items-center justify-content-center"
+                             style="width: 60px; height: 60px;">
+                            <span class="text-white">{{ content.producer.company_name|first|upper }}</span>
+                        </div>
+                    {% endif %}
+                    <div>
+                        <h6 class="mb-0">{{ content.producer.company_name }}</h6>
+                        <small class="text-muted">{{ content.producer.country }}</small>
+                    </div>
+                </div>
+
+                <!-- Producer Genres -->
+                {% if content.producer.genre_tags %}
+                <div class="mb-3">
+                    <small class="text-muted d-block mb-1">Specializes in:</small>
+                    {% for genre in content.producer.genre_tags %}
+                    <span class="badge bg-secondary">{{ genre }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Visit Booth (CNT-002) -->
+                <a href="{% url 'booths:detail' content.producer.booth_slug %}"
+                   class="btn btn-outline-primary w-100">
+                    Visit Producer Booth
+                </a>
+            </div>
+        </div>
+
+        <!-- Submit Offer Button (CNT-004) -->
+        <div class="card">
+            <div class="card-body">
+                {% if user.is_authenticated %}
+                    {% if can_submit_offer %}
+                        <a href="#" class="btn btn-primary w-100 btn-lg">
+                            <i class="bi bi-envelope"></i> Submit Offer
+                        </a>
+                        <p class="text-muted small mt-2 mb-0 text-center">
+                            Make an offer to license this content
+                        </p>
+                    {% elif user.role == 'creator' %}
+                        <div class="alert alert-info mb-0">
+                            <i class="bi bi-info-circle"></i> Only buyers can submit offers
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning mb-0">
+                            <i class="bi bi-exclamation-triangle"></i> Complete onboarding to submit offers
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <!-- Not logged in (CNT-004) -->
+                    <a href="{% url 'accounts:login' %}?next={{ request.path }}"
+                       class="btn btn-primary w-100 btn-lg">
+                        <i class="bi bi-box-arrow-in-right"></i> Login to Submit Offer
+                    </a>
+                    <p class="text-muted small mt-2 mb-0 text-center">
+                        You need to be logged in as a buyer
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Back to Browse -->
+<div class="mt-4">
+    <a href="{% url 'contents:browse' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Back to Browse
+    </a>
+</div>
+{% endblock %}

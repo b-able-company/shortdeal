@@ -1,7 +1,9 @@
 from django.urls import path
+from . import views
 
 app_name = 'contents'
 
 urlpatterns = [
-    # URL patterns for contents app will be added here
+    path('browse/', views.browse_view, name='browse'),
+    path('<int:content_id>/', views.content_detail_view, name='detail'),
 ]

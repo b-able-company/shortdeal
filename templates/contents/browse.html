@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+{% block title %}Browse Content - ShortDeal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Filters Sidebar -->
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Filters</h5>
+            </div>
+            <div class="card-body">
+                <form method="get" id="filterForm">
+                    <!-- Search (BRW-002) -->
+                    <div class="mb-3">
+                        <label for="search" class="form-label">Search</label>
+                        <input type="text" class="form-control" id="search" name="q"
+                               value="{{ search_query }}"
+                               placeholder="Title, producer, description">
+                    </div>
+
+                    <!-- Genre Filter (BRW-003) -->
+                    <div class="mb-3">
+                        <label class="form-label">Genre</label>
+                        {% for genre in genre_choices %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox"
+                                   name="genre" value="{{ genre }}"
+                                   id="genre_{{ genre }}"
+                                   {% if genre in genre_filter %}checked{% endif %}>
+                            <label class="form-check-label" for="genre_{{ genre }}">
+                                {{ genre|title }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Price Range Filter (BRW-004) -->
+                    <div class="mb-3">
+                        <label class="form-label">Price Range (USD)</label>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <input type="number" class="form-control form-control-sm"
+                                       name="price_min" placeholder="Min"
+                                       value="{{ price_min }}" step="100">
+                            </div>
+                            <div class="col-6">
+                                <input type="number" class="form-control form-control-sm"
+                                       name="price_max" placeholder="Max"
+                                       value="{{ price_max }}" step="100">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sorting -->
+                    <div class="mb-3">
+                        <label for="ordering" class="form-label">Sort By</label>
+                        <select class="form-select form-select-sm" name="ordering" id="ordering">
+                            <option value="-created_at" {% if ordering == '-created_at' %}selected{% endif %}>
+                                Newest First
+                            </option>
+                            <option value="created_at" {% if ordering == 'created_at' %}selected{% endif %}>
+                                Oldest First
+                            </option>
+                            <option value="price" {% if ordering == 'price' %}selected{% endif %}>
+                                Price: Low to High
+                            </option>
+                            <option value="-price" {% if ordering == '-price' %}selected{% endif %}>
+                                Price: High to Low
+                            </option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 mb-2">Apply Filters</button>
+                    <a href="{% url 'contents:browse' %}" class="btn btn-outline-secondary w-100">Reset</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content List -->
+    <div class="col-md-9">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Browse Content</h2>
+            <span class="text-muted">{{ total_count }} results</span>
+        </div>
+
+        {% if page_obj.object_list %}
+            <!-- Content Cards (BRW-001) -->
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for content in page_obj %}
+                <div class="col">
+                    <div class="card h-100 content-card">
+                        <!-- Thumbnail (16:9) -->
+                        <a href="{% url 'contents:detail' content.id %}" class="text-decoration-none">
+                            {% if content.thumbnail %}
+                                <img src="{{ content.thumbnail.url }}"
+                                     class="card-img-top"
+                                     alt="{{ content.title }}"
+                                     style="aspect-ratio: 16/9; object-fit: cover;">
+                            {% else %}
+                                <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center"
+                                     style="aspect-ratio: 16/9;">
+                                    <span class="text-white">No Image</span>
+                                </div>
+                            {% endif %}
+                        </a>
+
+                        <div class="card-body">
+                            <!-- Title (max 2 lines) -->
+                            <h5 class="card-title text-truncate-2" title="{{ content.title }}">
+                                <a href="{% url 'contents:detail' content.id %}" class="text-decoration-none text-dark">
+                                    {{ content.title }}
+                                </a>
+                            </h5>
+
+                            <!-- Producer -->
+                            <p class="card-text mb-2">
+                                <small class="text-muted">
+                                    by <a href="{% url 'booths:detail' content.producer.booth_slug %}"
+                                          class="text-decoration-none">
+                                        {{ content.producer.company_name }}
+                                    </a>
+                                </small>
+                            </p>
+
+                            <!-- Genre Tags (max 2) -->
+                            <div class="mb-2">
+                                {% for genre in content.genre_tags|slice:":2" %}
+                                <span class="badge bg-secondary">{{ genre }}</span>
+                                {% endfor %}
+                                {% if content.genre_tags|length > 2 %}
+                                <span class="badge bg-light text-dark">+{{ content.genre_tags|length|add:"-2" }}</span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Price -->
+                            <p class="card-text">
+                                <strong class="text-primary">${{ content.price|floatformat:0 }} {{ content.currency }}</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination (BRW-005) -->
+            {% if page_obj.has_other_pages %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if search_query %}q={{ search_query }}&{% endif %}{% for genre in genre_filter %}genre={{ genre }}&{% endfor %}{% if price_min %}price_min={{ price_min }}&{% endif %}{% if price_max %}price_max={{ price_max }}&{% endif %}ordering={{ ordering }}&page={{ page_obj.previous_page_number }}">
+                            Previous
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% if search_query %}q={{ search_query }}&{% endif %}{% for genre in genre_filter %}genre={{ genre }}&{% endfor %}{% if price_min %}price_min={{ price_min }}&{% endif %}{% if price_max %}price_max={{ price_max }}&{% endif %}ordering={{ ordering }}&page={{ num }}">
+                                {{ num }}
+                            </a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if search_query %}q={{ search_query }}&{% endif %}{% for genre in genre_filter %}genre={{ genre }}&{% endfor %}{% if price_min %}price_min={{ price_min }}&{% endif %}{% if price_max %}price_max={{ price_max }}&{% endif %}ordering={{ ordering }}&page={{ page_obj.next_page_number }}">
+                            Next
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Next</span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+        {% else %}
+            <!-- Empty State (BRW-006) -->
+            <div class="text-center py-5">
+                <svg class="mb-3" width="64" height="64" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+                </svg>
+                <h4>No content found</h4>
+                <p class="text-muted">Try adjusting your search or filter criteria</p>
+                <a href="{% url 'contents:browse' %}" class="btn btn-primary">Clear Filters</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.content-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.content-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+</style>
+{% endblock %}

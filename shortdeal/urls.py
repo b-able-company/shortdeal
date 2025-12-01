@@ -21,6 +21,8 @@ urlpatterns = [
 
     # Template-based URLs (session-based, for testing)
     path('accounts/', include('apps.accounts.urls')),
+    path('', include('apps.contents.urls')),
+    path('booth/', include('apps.booths.urls')),
 ]
 
 # Debug toolbar (개발환경)

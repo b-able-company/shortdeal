@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ producer.company_name }} - Producer Booth{% endblock %}
+
+{% block content %}
+<!-- Producer Header (BTH-001) -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row align-items-center">
+            <div class="col-md-2 text-center">
+                {% if producer.logo %}
+                    <img src="{{ producer.logo.url }}"
+                         alt="{{ producer.company_name }}"
+                         class="rounded-circle"
+                         style="width: 120px; height: 120px; object-fit: cover;">
+                {% else %}
+                    <div class="rounded-circle bg-secondary mx-auto d-flex align-items-center justify-content-center"
+                         style="width: 120px; height: 120px;">
+                        <span class="text-white fs-1">{{ producer.company_name|first|upper }}</span>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-md-10">
+                <h1 class="mb-2">{{ producer.company_name }}</h1>
+
+                <!-- Country -->
+                <p class="text-muted mb-2">
+                    <i class="bi bi-geo-alt"></i> {{ producer.country }}
+                </p>
+
+                <!-- Genre Tags (BTH-001) -->
+                {% if producer.genre_tags %}
+                <div class="mb-2">
+                    <small class="text-muted d-block mb-1">Specializes in:</small>
+                    {% for genre in producer.genre_tags %}
+                    <span class="badge bg-primary">{{ genre }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Booth Stats -->
+                <div class="d-flex gap-4 mt-3">
+                    <div>
+                        <strong>{{ total_count }}</strong>
+                        <small class="text-muted">Content{{ total_count|pluralize }}</small>
+                    </div>
+                    <div>
+                        <strong>{{ booth.view_count }}</strong>
+                        <small class="text-muted">Booth View{{ booth.view_count|pluralize }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Producer's Content List (BTH-002) -->
+<div class="card">
+    <div class="card-header">
+        <h4 class="mb-0">Content from {{ producer.company_name }}</h4>
+    </div>
+    <div class="card-body">
+        {% if page_obj.object_list %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+                {% for content in page_obj %}
+                <div class="col">
+                    <div class="card h-100 content-card">
+                        <!-- Thumbnail -->
+                        <a href="{% url 'contents:detail' content.id %}" class="text-decoration-none">
+                            {% if content.thumbnail %}
+                                <img src="{{ content.thumbnail.url }}"
+                                     class="card-img-top"
+                                     alt="{{ content.title }}"
+                                     style="aspect-ratio: 16/9; object-fit: cover;">
+                            {% else %}
+                                <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center"
+                                     style="aspect-ratio: 16/9;">
+                                    <span class="text-white">No Image</span>
+                                </div>
+                            {% endif %}
+                        </a>
+
+                        <div class="card-body">
+                            <!-- Title -->
+                            <h6 class="card-title text-truncate-2" title="{{ content.title }}">
+                                <a href="{% url 'contents:detail' content.id %}"
+                                   class="text-decoration-none text-dark">
+                                    {{ content.title }}
+                                </a>
+                            </h6>
+
+                            <!-- Genre Tags -->
+                            <div class="mb-2">
+                                {% for genre in content.genre_tags|slice:":2" %}
+                                <span class="badge bg-secondary">{{ genre }}</span>
+                                {% endfor %}
+                                {% if content.genre_tags|length > 2 %}
+                                <span class="badge bg-light text-dark">+{{ content.genre_tags|length|add:"-2" }}</span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Price -->
+                            <p class="card-text mb-0">
+                                <strong class="text-primary">${{ content.price|floatformat:0 }} {{ content.currency }}</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Next</span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+        {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-5">
+                <svg class="mb-3" width="64" height="64" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                    <path d="M6.5 5a.5.5 0 0 0-1 0v3.362l-1.429-1.429a.5.5 0 1 0-.707.708l2.134 2.133a.5.5 0 0 0 .708 0l2.134-2.133a.5.5 0 0 0-.708-.708L6.5 8.362V5z"/>
+                </svg>
+                <h4>No content yet</h4>
+                <p class="text-muted">This producer hasn't uploaded any content yet</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Back to Browse -->
+<div class="mt-4">
+    <a href="{% url 'contents:browse' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Back to Browse
+    </a>
+</div>
+
+<style>
+.content-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.content-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+</style>
+{% endblock %}
