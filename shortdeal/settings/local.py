@@ -14,7 +14,9 @@ DATABASES = {
         'NAME': 'shortdeal',
         'USER': 'shortdeal',
         'PASSWORD': os.getenv('DB_PASSWORD', 'shortdeal123'),
-        'HOST': 'db',  # Docker DB accessed from local host
+        # Use Docker service name by default; override with DB_HOST=localhost for bare-metal runs
+        # 'HOST': os.getenv('DB_HOST', 'db'),
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
