@@ -11,6 +11,8 @@ urlpatterns = [
 
     # API URLs (JWT-based)
     path('api/v1/auth/', include('apps.accounts.api_urls')),
+    path('api/v1/contents/', include('apps.contents.api_urls')),
+    path('api/v1/booths/', include('apps.booths.api_urls')),
 
     # Template-based URLs (session-based, for testing)
     path('accounts/', include('apps.accounts.urls')),
