@@ -25,7 +25,10 @@ class SignUpForm(UserCreationForm):
     )
 
     role = forms.ChoiceField(
-        choices=User.Role.choices,
+        choices=[
+            (User.Role.CREATOR, 'Creator'),
+            (User.Role.BUYER, 'Buyer'),
+        ],  # Admin users created via Django admin only
         required=True,
         widget=forms.RadioSelect(attrs={
             'class': 'form-check-input'
