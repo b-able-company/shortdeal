@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ loi.document_number }} - LOI{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Letter of Intent</h2>
+            {% if loi.is_pdf_ready %}
+            <a href="{{ loi.pdf_file.url }}" class="btn btn-primary" download>
+                <i class="bi bi-download"></i> Download PDF
+            </a>
+            {% else %}
+            <button class="btn btn-secondary" disabled>
+                <i class="bi bi-hourglass-split"></i> PDF Generating...
+            </button>
+            {% endif %}
+        </div>
+
+        <!-- Document Info -->
+        <div class="card mb-4">
+            <div class="card-header"><h5 class="mb-0">Document Information</h5></div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-6">
+                        <h6 class="text-muted mb-1">Document Number</h6>
+                        <p class="fs-4 mb-0"><strong>{{ loi.document_number }}</strong></p>
+                    </div>
+                    <div class="col-sm-6">
+                        <h6 class="text-muted mb-1">Created</h6>
+                        <p class="fs-4 mb-0">{{ loi.created_at|date:"Y-m-d H:i" }}</p>
+                    </div>
+                </div>
+                {% if loi.pdf_generated_at %}
+                <div>
+                    <h6 class="text-muted mb-1">PDF Generated</h6>
+                    <p class="mb-0">{{ loi.pdf_generated_at|date:"Y-m-d H:i" }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Content Details -->
+        <div class="card mb-4">
+            <div class="card-header"><h5 class="mb-0">Content</h5></div>
+            <div class="card-body">
+                <h4>{{ loi.content_title }}</h4>
+                <p class="text-muted">{{ loi.content_description }}</p>
+            </div>
+        </div>
+
+        <!-- Deal Details -->
+        <div class="card mb-4">
+            <div class="card-header"><h5 class="mb-0">Agreement Details</h5></div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6 mb-3">
+                        <h6 class="text-muted mb-1">Agreed Price</h6>
+                        <p class="fs-3 mb-0"><strong class="text-success">${{ loi.agreed_price|floatformat:2 }}</strong> {{ loi.currency }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Party Details -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            Buyer
+                            {% if user_role == 'buyer' %}<span class="badge bg-primary ms-2">You</span>{% endif %}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <h5>{{ loi.buyer_company }}</h5>
+                        <p class="text-muted mb-0">{{ loi.buyer_country }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            Producer
+                            {% if user_role == 'producer' %}<span class="badge bg-success ms-2">You</span>{% endif %}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <h5>{{ loi.producer_company }}</h5>
+                        <p class="text-muted mb-0">{{ loi.producer_country }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Offer -->
+        <div class="card mb-4">
+            <div class="card-header"><h5 class="mb-0">Related Offer</h5></div>
+            <div class="card-body">
+                <p class="mb-2">
+                    <strong>Offer ID:</strong> #{{ loi.offer.id }}
+                </p>
+                <p class="mb-0">
+                    <strong>Accepted on:</strong> {{ loi.offer.responded_at|date:"Y-m-d H:i" }}
+                </p>
+            </div>
+        </div>
+
+        <!-- PDF Status -->
+        {% if not loi.is_pdf_ready %}
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> The PDF document is being generated. Please refresh the page in a few moments.
+        </div>
+        {% endif %}
+
+        <a href="{% url 'loi:list' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to LOIs
+        </a>
+    </div>
+</div>
+{% endblock %}
