@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Admin Dashboard</h2>
+    <div class="btn-group" role="group">
+        <a href="?period=7d" class="btn btn-sm {% if period == '7d' %}btn-primary{% else %}btn-outline-primary{% endif %}">Last 7 Days</a>
+        <a href="?period=30d" class="btn btn-sm {% if period == '30d' %}btn-primary{% else %}btn-outline-primary{% endif %}">Last 30 Days</a>
+    </div>
+</div>
+
+<!-- Summary Statistics -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="text-muted mb-2">Total Users</h6>
+                <h2 class="mb-0">{{ summary.total_users }}</h2>
+                <small class="text-muted">
+                    Producers: {{ summary.total_producers }} | Buyers: {{ summary.total_buyers }}
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="text-muted mb-2">Total Contents</h6>
+                <h2 class="mb-0">{{ summary.total_contents }}</h2>
+                <small class="text-success">
+                    +{{ period_stats.new_contents }} ({{ period }})
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="text-muted mb-2">Total Offers</h6>
+                <h2 class="mb-0">{{ summary.total_offers }}</h2>
+                <small class="text-muted">
+                    Pending: <span class="badge bg-warning text-dark">{{ summary.pending_offers }}</span>
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="text-muted mb-2">Total LOIs</h6>
+                <h2 class="mb-0">{{ summary.total_lois }}</h2>
+                <small class="text-success">
+                    +{{ period_stats.new_lois }} ({{ period }})
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Period Statistics -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Period Statistics ({{ period }})</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3">
+                <h6 class="text-muted mb-1">New Users</h6>
+                <h3 class="mb-0">{{ period_stats.new_users }}</h3>
+            </div>
+            <div class="col-md-3">
+                <h6 class="text-muted mb-1">New Contents</h6>
+                <h3 class="mb-0">{{ period_stats.new_contents }}</h3>
+            </div>
+            <div class="col-md-3">
+                <h6 class="text-muted mb-1">New Offers</h6>
+                <h3 class="mb-0">{{ period_stats.new_offers }}</h3>
+            </div>
+            <div class="col-md-3">
+                <h6 class="text-muted mb-1">New LOIs</h6>
+                <h3 class="mb-0">{{ period_stats.new_lois }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Users -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Recent Users (Last 10)</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Company</th>
+                        <th>Role</th>
+                        <th>Joined</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in recent_users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.company_name|default:user.username }}</td>
+                        <td>
+                            {% if user.role == 'creator' %}
+                            <span class="badge bg-success">Producer</span>
+                            {% elif user.role == 'buyer' %}
+                            <span class="badge bg-primary">Buyer</span>
+                            {% else %}
+                            <span class="badge bg-secondary">{{ user.get_role_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td><small>{{ user.date_joined|date:"Y-m-d H:i" }}</small></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">No users yet</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Contents -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Recent Contents (Last 10)</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Producer</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for content in recent_contents %}
+                    <tr>
+                        <td>{{ content.id }}</td>
+                        <td>
+                            <a href="{% url 'contents:detail' content.id %}" target="_blank">
+                                {{ content.title }}
+                            </a>
+                        </td>
+                        <td>{{ content.producer.company_name|default:content.producer.username }}</td>
+                        <td>
+                            {% if content.status == 'public' %}
+                            <span class="badge bg-success">Public</span>
+                            {% else %}
+                            <span class="badge bg-secondary">{{ content.status|title }}</span>
+                            {% endif %}
+                        </td>
+                        <td><small>{{ content.created_at|date:"Y-m-d H:i" }}</small></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">No contents yet</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Offers -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Recent Offers (Last 10)</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Content</th>
+                        <th>Buyer</th>
+                        <th>Producer</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for offer in recent_offers %}
+                    <tr>
+                        <td>{{ offer.id }}</td>
+                        <td>{{ offer.content.title|truncatechars:30 }}</td>
+                        <td>{{ offer.buyer.company_name|default:offer.buyer.username }}</td>
+                        <td>{{ offer.content.producer.company_name|default:offer.content.producer.username }}</td>
+                        <td><strong>${{ offer.offered_price|floatformat:2 }}</strong></td>
+                        <td>
+                            {% if offer.status == 'pending' %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                            {% elif offer.status == 'accepted' %}
+                            <span class="badge bg-success">Accepted</span>
+                            {% elif offer.status == 'rejected' %}
+                            <span class="badge bg-danger">Rejected</span>
+                            {% elif offer.status == 'expired' %}
+                            <span class="badge bg-secondary">Expired</span>
+                            {% endif %}
+                        </td>
+                        <td><small>{{ offer.created_at|date:"Y-m-d H:i" }}</small></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">No offers yet</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

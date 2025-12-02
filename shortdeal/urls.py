@@ -24,6 +24,8 @@ urlpatterns = [
     path('', include('apps.contents.urls')),
     path('booth/', include('apps.booths.urls')),
     path('offers/', include('apps.offers.urls')),
+    path('loi/', include('apps.loi.urls')),
+    path('', include('apps.core.urls')),
 ]
 
 # Debug toolbar (개발환경)
