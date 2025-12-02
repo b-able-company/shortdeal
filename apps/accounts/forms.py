@@ -26,7 +26,7 @@ class SignUpForm(UserCreationForm):
 
     role = forms.ChoiceField(
         choices=[
-            (User.Role.CREATOR, 'Creator'),
+            (User.Role.CREATOR, 'Producer'),
             (User.Role.BUYER, 'Buyer'),
         ],  # Admin users created via Django admin only
         required=True,
