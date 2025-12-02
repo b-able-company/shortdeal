@@ -5,6 +5,7 @@
 - Follow response envelope `{success, data, message, pagination?, meta?}` and base URL `/api/v1/`.
 - Enforce business rules: producer signup → booth auto-create, single pending offer per content/buyer, offer accept → LOI auto-create, onboarding gate, email notifications, soft delete via `status='deleted'`.
 - No raw SQL, no custom user beyond AbstractUser extension, UTC timestamps, ArrayField for tags, foreign keys default CASCADE.
+- Actual repo layout: apps are nested under `apps/` (accounts, booths, contents, offers, loi, core, notifications) with project settings in `shortdeal/settings/`; keep plan/actions aligned to this structure.
 
 ## Required Validations (done before coding)
 - **Edge case analysis**
