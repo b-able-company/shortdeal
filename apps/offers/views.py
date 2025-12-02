@@ -175,3 +175,104 @@ def buyer_offer_detail_view(request, offer_id):
     }
 
     return render(request, 'offers/buyer_detail.html', context)
+
+
+# ========== Producer Offer Views ==========
+
+@login_required
+def producer_offer_list_view(request):
+    """
+    [제작사] 오퍼 관리 (/studio/offers)
+    - OFR-030: 오퍼 목록, 필터, 요약
+    - 권한: IsAuthenticated + IsProducer
+    """
+    # Check if user is producer
+    if request.user.role != 'creator':
+        messages.error(request, 'This page is only for producers.')
+        return redirect('home')
+
+    # Get offers for producer's contents
+    from apps.contents.models import Content
+    producer_contents = Content.objects.filter(producer=request.user)
+
+    offers = Offer.objects.filter(
+        content__in=producer_contents
+    ).select_related('content', 'buyer').order_by('-created_at')
+
+    # Status filter
+    status_filter = request.GET.get('status')
+    if status_filter:
+        offers = offers.filter(status=status_filter)
+
+    # Pagination
+    paginator = Paginator(offers, 20)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    # Summary stats
+    from apps.core.constants import OFFER_STATUS_PENDING
+    summary = {
+        'total': Offer.objects.filter(content__in=producer_contents).count(),
+        'pending': Offer.objects.filter(content__in=producer_contents, status=OFFER_STATUS_PENDING).count(),
+    }
+
+    context = {
+        'page_obj': page_obj,
+        'status_filter': status_filter,
+        'summary': summary,
+        'total_count': paginator.count,
+    }
+
+    return render(request, 'offers/producer_list.html', context)
+
+
+@login_required
+def producer_offer_detail_view(request, offer_id):
+    """
+    [제작사] 오퍼 상세 및 응답 (/studio/offers/:offerId)
+    - OFR-040~043: 오퍼 정보, 희망가 비교, 수락/거절
+    - 권한: IsAuthenticated + IsProducer + IsOwner
+    """
+    # Get offer (only for producer's own contents)
+    from apps.contents.models import Content
+    producer_contents = Content.objects.filter(producer=request.user)
+
+    offer = get_object_or_404(
+        Offer.objects.select_related('content', 'buyer'),
+        pk=offer_id,
+        content__in=producer_contents
+    )
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        response_message = request.POST.get('response_message', '').strip()
+
+        if action == 'accept':
+            if offer.status != 'pending':
+                messages.error(request, 'This offer has already been responded to.')
+            elif offer.is_expired:
+                messages.error(request, 'This offer has expired.')
+            else:
+                try:
+                    offer.accept(producer_response=response_message)
+                    messages.success(request, 'Offer accepted! An LOI has been created.')
+                    return redirect('offers:producer_detail', offer_id=offer.id)
+                except ValueError as e:
+                    messages.error(request, str(e))
+
+        elif action == 'reject':
+            if offer.status != 'pending':
+                messages.error(request, 'This offer has already been responded to.')
+            else:
+                try:
+                    offer.reject(producer_response=response_message)
+                    messages.success(request, 'Offer rejected.')
+                    return redirect('offers:producer_detail', offer_id=offer.id)
+                except ValueError as e:
+                    messages.error(request, str(e))
+
+    context = {
+        'offer': offer,
+    }
+
+    return render(request, 'offers/producer_detail.html', context)

@@ -8,4 +8,8 @@ urlpatterns = [
     path('my/', views.buyer_offer_list_view, name='buyer_list'),
     path('my/<int:offer_id>/', views.buyer_offer_detail_view, name='buyer_detail'),
     path('create/<int:content_id>/', views.offer_create_view, name='create'),
+
+    # Producer URLs
+    path('studio/', views.producer_offer_list_view, name='producer_list'),
+    path('studio/<int:offer_id>/', views.producer_offer_detail_view, name='producer_detail'),
 ]

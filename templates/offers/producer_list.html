@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Received Offers - Studio{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Received Offers</h2>
+    <div>
+        <span class="badge bg-secondary">{{ summary.total }} total</span>
+        <span class="badge bg-warning text-dark">{{ summary.pending }} pending</span>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-auto">
+                <label for="status" class="col-form-label">Filter:</label>
+            </div>
+            <div class="col-auto">
+                <select class="form-select" name="status" id="status" onchange="this.form.submit()">
+                    <option value="">All Offers</option>
+                    <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="accepted" {% if status_filter == 'accepted' %}selected{% endif %}>Accepted</option>
+                    <option value="rejected" {% if status_filter == 'rejected' %}selected{% endif %}>Rejected</option>
+                    <option value="expired" {% if status_filter == 'expired' %}selected{% endif %}>Expired</option>
+                </select>
+            </div>
+            {% if status_filter %}
+            <div class="col-auto">
+                <a href="{% url 'offers:producer_list' %}" class="btn btn-outline-secondary">Clear</a>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+{% if page_obj.object_list %}
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Content</th>
+                        <th>Buyer</th>
+                        <th>Offered Price</th>
+                        <th>Asking Price</th>
+                        <th>Status</th>
+                        <th>Received</th>
+                        <th>Expires</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for offer in page_obj %}
+                    <tr>
+                        <td>{{ offer.content.title }}</td>
+                        <td>{{ offer.buyer.company_name }}</td>
+                        <td><strong>${{ offer.offered_price|floatformat:2 }}</strong></td>
+                        <td class="text-muted">${{ offer.content.price|floatformat:2 }}</td>
+                        <td>
+                            {% if offer.status == 'pending' %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                            {% elif offer.status == 'accepted' %}
+                            <span class="badge bg-success">Accepted</span>
+                            {% elif offer.status == 'rejected' %}
+                            <span class="badge bg-danger">Rejected</span>
+                            {% elif offer.status == 'expired' %}
+                            <span class="badge bg-secondary">Expired</span>
+                            {% endif %}
+                        </td>
+                        <td><small>{{ offer.created_at|date:"Y-m-d" }}</small></td>
+                        <td><small class="{% if offer.is_expired %}text-danger{% endif %}">{{ offer.expires_at|date:"Y-m-d" }}</small></td>
+                        <td>
+                            <a href="{% url 'offers:producer_detail' offer.id %}" class="btn btn-sm btn-outline-primary">
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% endif %}
+        <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% else %}
+<div class="card">
+    <div class="card-body text-center py-5">
+        <h4>No offers yet</h4>
+        <p class="text-muted">You haven't received any offers yet</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
