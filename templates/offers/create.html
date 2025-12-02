@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+
+{% block title %}Submit Offer - {{ content.title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h2 class="mb-4">Submit an Offer</h2>
+
+        <!-- Content Info Card (OFR-004) -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        {% if content.thumbnail %}
+                            <img src="{{ content.thumbnail.url }}"
+                                 class="img-fluid rounded"
+                                 alt="{{ content.title }}"
+                                 style="aspect-ratio: 16/9; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-secondary rounded d-flex align-items-center justify-content-center"
+                                 style="aspect-ratio: 16/9;">
+                                <span class="text-white">No Image</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8">
+                        <h4 class="mb-2">{{ content.title }}</h4>
+                        <p class="text-muted mb-2">
+                            by {{ content.producer.company_name }}
+                        </p>
+                        <div class="mb-2">
+                            {% for genre in content.genre_tags %}
+                            <span class="badge bg-secondary">{{ genre }}</span>
+                            {% endfor %}
+                        </div>
+                        <p class="mb-0">
+                            <strong>Asking Price:</strong>
+                            <span class="fs-5 text-primary">${{ content.price|floatformat:2 }} {{ content.currency }}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Existing Offer Warning (OFR-006) -->
+        {% if existing_offer %}
+        <div class="alert alert-warning">
+            <h5 class="alert-heading">
+                <i class="bi bi-exclamation-triangle"></i> Existing Offer
+            </h5>
+            <p class="mb-0">
+                You already have a pending offer for this content
+                (submitted on {{ existing_offer.created_at|date:"Y-m-d" }}).
+                Please wait for the producer's response or
+                <a href="{% url 'offers:buyer_detail' existing_offer.id %}">view your offer</a>.
+            </p>
+        </div>
+        {% else %}
+
+        <!-- Offer Form (OFR-001~005) -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Your Offer Details</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+
+                    <!-- Offered Price (OFR-001) -->
+                    <div class="mb-3">
+                        <label for="offered_price" class="form-label">
+                            Offered Price <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number"
+                                   class="form-control"
+                                   id="offered_price"
+                                   name="offered_price"
+                                   step="0.01"
+                                   min="0"
+                                   required
+                                   placeholder="Enter your offer amount">
+                            <span class="input-group-text">{{ content.currency }}</span>
+                        </div>
+                        <small class="text-muted">
+                            Asking price: ${{ content.price|floatformat:2 }} {{ content.currency }}
+                        </small>
+                    </div>
+
+                    <!-- Message (OFR-002) -->
+                    <div class="mb-3">
+                        <label for="message" class="form-label">
+                            Message to Producer (Optional)
+                        </label>
+                        <textarea class="form-control"
+                                  id="message"
+                                  name="message"
+                                  rows="4"
+                                  maxlength="500"
+                                  placeholder="Add a message to your offer (max 500 characters)"></textarea>
+                        <small class="text-muted">
+                            <span id="char-count">0</span>/500 characters
+                        </small>
+                    </div>
+
+                    <!-- Validity Period (OFR-003) -->
+                    <div class="mb-4">
+                        <label class="form-label">
+                            Offer Validity <span class="text-danger">*</span>
+                        </label>
+                        <div class="row g-2">
+                            {% for choice in validity_choices %}
+                            <div class="col-md-4">
+                                <div class="form-check validity-option">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="validity_days"
+                                           id="validity_{{ choice.days }}"
+                                           value="{{ choice.days }}"
+                                           {% if choice.days == 7 %}checked{% endif %}>
+                                    <label class="form-check-label w-100" for="validity_{{ choice.days }}">
+                                        <div class="card h-100">
+                                            <div class="card-body text-center p-3">
+                                                <strong class="d-block fs-4">{{ choice.days }}</strong>
+                                                <small class="text-muted">days</small>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <small class="text-muted">
+                            The producer must respond within this period
+                        </small>
+                    </div>
+
+                    <!-- Submit Button (OFR-005) -->
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-send"></i> Submit Offer
+                        </button>
+                        <a href="{% url 'contents:detail' content.id %}"
+                           class="btn btn-outline-secondary">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.validity-option input[type="radio"]:checked ~ label .card {
+    border-color: #0d6efd;
+    background-color: #f8f9ff;
+}
+
+.validity-option .card {
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.validity-option .card:hover {
+    border-color: #0d6efd;
+}
+</style>
+
+<script>
+// Character counter
+const messageInput = document.getElementById('message');
+const charCount = document.getElementById('char-count');
+
+if (messageInput && charCount) {
+    messageInput.addEventListener('input', function() {
+        charCount.textContent = this.value.length;
+    });
+}
+
+// Make validity cards clickable
+document.querySelectorAll('.validity-option .card').forEach(card => {
+    card.addEventListener('click', function() {
+        const radio = this.closest('.validity-option').querySelector('input[type="radio"]');
+        radio.checked = true;
+
+        // Update visual state
+        document.querySelectorAll('.validity-option .card').forEach(c => {
+            c.style.borderColor = '';
+            c.style.backgroundColor = '';
+        });
+        this.style.borderColor = '#0d6efd';
+        this.style.backgroundColor = '#f8f9ff';
+    });
+});
+</script>
+{% endblock %}

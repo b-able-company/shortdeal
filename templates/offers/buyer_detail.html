@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+
+{% block title %}Offer Details - ShortDeal{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Offer Details</h2>
+            {% if offer.status == 'pending' %}
+                <span class="badge bg-warning text-dark fs-6">Pending</span>
+            {% elif offer.status == 'accepted' %}
+                <span class="badge bg-success fs-6">Accepted</span>
+            {% elif offer.status == 'rejected' %}
+                <span class="badge bg-danger fs-6">Rejected</span>
+            {% elif offer.status == 'expired' %}
+                <span class="badge bg-secondary fs-6">Expired</span>
+            {% endif %}
+        </div>
+
+        <!-- Content Information (OFR-020) -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Content Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        {% if offer.content.thumbnail %}
+                            <img src="{{ offer.content.thumbnail.url }}"
+                                 class="img-fluid rounded"
+                                 alt="{{ offer.content.title }}"
+                                 style="aspect-ratio: 16/9; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-secondary rounded d-flex align-items-center justify-content-center"
+                                 style="aspect-ratio: 16/9;">
+                                <span class="text-white">No Image</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8">
+                        <h4 class="mb-2">
+                            <a href="{% url 'contents:detail' offer.content.id %}"
+                               class="text-decoration-none">
+                                {{ offer.content.title }}
+                            </a>
+                        </h4>
+                        <p class="text-muted mb-2">
+                            by <a href="{% url 'booths:detail' offer.content.producer.booth_slug %}"
+                                  class="text-decoration-none">
+                                {{ offer.content.producer.company_name }}
+                            </a>
+                        </p>
+                        <div class="mb-2">
+                            {% for genre in offer.content.genre_tags %}
+                            <span class="badge bg-secondary">{{ genre }}</span>
+                            {% endfor %}
+                        </div>
+                        <p class="mb-0">
+                            <strong>Asking Price:</strong>
+                            <span class="text-primary">${{ offer.content.price|floatformat:2 }} {{ offer.content.currency }}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Offer Details (OFR-020) -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Your Offer</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-6">
+                        <h6 class="text-muted mb-1">Offered Price</h6>
+                        <p class="fs-4 mb-0">
+                            <strong class="text-success">${{ offer.offered_price|floatformat:2 }} {{ offer.currency }}</strong>
+                        </p>
+                    </div>
+                    <div class="col-sm-6">
+                        <h6 class="text-muted mb-1">Asking Price</h6>
+                        <p class="fs-4 mb-0">
+                            <strong class="text-primary">${{ offer.content.price|floatformat:2 }} {{ offer.content.currency }}</strong>
+                        </p>
+                    </div>
+                </div>
+
+                {% if offer.message %}
+                <div class="mb-3">
+                    <h6 class="text-muted mb-1">Your Message</h6>
+                    <p class="mb-0" style="white-space: pre-wrap;">{{ offer.message }}</p>
+                </div>
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h6 class="text-muted mb-1">Submitted</h6>
+                        <p class="mb-0">{{ offer.created_at|date:"Y-m-d H:i" }}</p>
+                    </div>
+                    <div class="col-sm-4">
+                        <h6 class="text-muted mb-1">Valid Until</h6>
+                        <p class="mb-0 {% if offer.is_expired %}text-danger{% endif %}">
+                            {{ offer.expires_at|date:"Y-m-d H:i" }}
+                        </p>
+                    </div>
+                    <div class="col-sm-4">
+                        <h6 class="text-muted mb-1">Validity Period</h6>
+                        <p class="mb-0">{{ offer.validity_days }} days</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Producer Response (if responded) -->
+        {% if offer.responded_at %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Producer Response</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <h6 class="text-muted mb-1">Response Date</h6>
+                    <p class="mb-0">{{ offer.responded_at|date:"Y-m-d H:i" }}</p>
+                </div>
+
+                {% if offer.producer_response %}
+                <div class="mb-0">
+                    <h6 class="text-muted mb-1">Message from Producer</h6>
+                    <div class="alert {% if offer.status == 'accepted' %}alert-success{% else %}alert-danger{% endif %}">
+                        {{ offer.producer_response }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- LOI Link (OFR-021) -->
+        {% if offer.status == 'accepted' and loi %}
+        <div class="alert alert-success">
+            <h5 class="alert-heading">
+                <i class="bi bi-check-circle"></i> Offer Accepted!
+            </h5>
+            <p class="mb-3">
+                Your offer has been accepted by the producer.
+                A Letter of Intent (LOI) has been generated.
+            </p>
+            <a href="#" class="btn btn-success">
+                <i class="bi bi-file-earmark-text"></i> View LOI Document
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- Status Messages -->
+        {% if offer.status == 'pending' %}
+        <div class="alert alert-info">
+            <i class="bi bi-clock"></i>
+            Waiting for producer response. The producer has until
+            <strong>{{ offer.expires_at|date:"Y-m-d" }}</strong> to respond.
+        </div>
+        {% elif offer.status == 'rejected' %}
+        <div class="alert alert-danger">
+            <i class="bi bi-x-circle"></i>
+            This offer was rejected by the producer.
+        </div>
+        {% elif offer.status == 'expired' %}
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle"></i>
+            This offer has expired. You may submit a new offer if you wish.
+        </div>
+        {% endif %}
+
+        <!-- Actions -->
+        <div class="d-flex gap-2">
+            <a href="{% url 'offers:buyer_list' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to My Offers
+            </a>
+            <a href="{% url 'contents:detail' offer.content.id %}" class="btn btn-outline-primary">
+                View Content
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

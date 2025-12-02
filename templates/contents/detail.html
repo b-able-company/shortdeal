@@ -125,7 +125,7 @@
             <div class="card-body">
                 {% if user.is_authenticated %}
                     {% if can_submit_offer %}
-                        <a href="#" class="btn btn-primary w-100 btn-lg">
+                        <a href="{% url 'offers:create' content.id %}" class="btn btn-primary w-100 btn-lg">
                             <i class="bi bi-envelope"></i> Submit Offer
                         </a>
                         <p class="text-muted small mt-2 mb-0 text-center">
