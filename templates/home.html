@@ -24,14 +24,14 @@
                 <a href="{% url 'contents:browse' %}" class="btn btn-primary btn-lg me-3">
                     Hot Content
                 </a>
-                <a href="#" class="btn btn-outline-primary btn-lg">
+                <a href="{% url 'core:tutorial' %}" class="btn btn-outline-primary btn-lg">
                     View Tutorial
                 </a>
             {% else %}
                 <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-lg me-3">
                     Sign In
                 </a>
-                <a href="#" class="btn btn-outline-primary btn-lg">
+                <a href="{% url 'core:tutorial' %}" class="btn btn-outline-primary btn-lg">
                     View Tutorial
                 </a>
             {% endif %}

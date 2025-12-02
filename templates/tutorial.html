@@ -1,0 +1,334 @@
+{% extends 'base.html' %}
+
+{% block title %}How to Use ShortDeal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <h1 class="mb-4">How to Use ShortDeal</h1>
+        <p class="lead text-muted mb-5">
+            Welcome to ShortDeal! This guide will help you get started with our short-form content trading platform.
+        </p>
+
+        <!-- Getting Started -->
+        <section class="mb-5">
+            <h2 class="mb-3">🚀 Getting Started</h2>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">1. Create Your Account</h5>
+                    <p class="card-text">
+                        First, you need to sign up for a ShortDeal account. Choose your role:
+                    </p>
+                    <ul>
+                        <li><strong>Producer:</strong> If you want to sell your short-form content</li>
+                        <li><strong>Buyer:</strong> If you want to purchase short-form content</li>
+                    </ul>
+                    <p class="mb-0">
+                        <a href="{% url 'accounts:signup' %}" class="btn btn-primary">Sign Up Now</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- For Producers -->
+        <section class="mb-5">
+            <h2 class="mb-3">🎥 For Producers</h2>
+
+            <div class="accordion" id="producerAccordion">
+                <!-- Step 1: Complete Onboarding -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="producerHeading1">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#producerCollapse1" aria-expanded="true" aria-controls="producerCollapse1">
+                            Step 1: Complete Your Onboarding
+                        </button>
+                    </h2>
+                    <div id="producerCollapse1" class="accordion-collapse collapse show" aria-labelledby="producerHeading1" data-bs-parent="#producerAccordion">
+                        <div class="accordion-body">
+                            <p>After signing up as a Producer, you'll need to complete onboarding:</p>
+                            <ul>
+                                <li>Enter your company name</li>
+                                <li>Add a description of your business</li>
+                                <li>Set up your booth (your storefront on ShortDeal)</li>
+                            </ul>
+                            <p class="mb-0"><em>This information helps buyers understand who you are and what content you create.</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Upload Content -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="producerHeading2">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#producerCollapse2" aria-expanded="false" aria-controls="producerCollapse2">
+                            Step 2: Upload Your Content
+                        </button>
+                    </h2>
+                    <div id="producerCollapse2" class="accordion-collapse collapse" aria-labelledby="producerHeading2" data-bs-parent="#producerAccordion">
+                        <div class="accordion-body">
+                            <p>Go to <strong>My Content</strong> in the navigation menu and click <strong>Upload New Content</strong>:</p>
+                            <ul>
+                                <li>Add a compelling title and description</li>
+                                <li>Upload your video file</li>
+                                <li>Add a thumbnail image (optional)</li>
+                                <li>Choose categories/tags</li>
+                                <li>Set content status (Draft or Public)</li>
+                            </ul>
+                            <p class="mb-0"><em>You can upload multiple pieces of content and manage them all from your dashboard.</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Receive Offers -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="producerHeading3">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#producerCollapse3" aria-expanded="false" aria-controls="producerCollapse3">
+                            Step 3: Receive and Manage Offers
+                        </button>
+                    </h2>
+                    <div id="producerCollapse3" class="accordion-collapse collapse" aria-labelledby="producerHeading3" data-bs-parent="#producerAccordion">
+                        <div class="accordion-body">
+                            <p>When buyers are interested in your content, they'll send offers:</p>
+                            <ul>
+                                <li>View all offers in <strong>Received Offers</strong></li>
+                                <li>Review offer details (price, terms, buyer information)</li>
+                                <li>Accept or reject offers</li>
+                                <li>Negotiate terms if needed</li>
+                            </ul>
+                            <p class="mb-0"><em>Each offer includes detailed information to help you make informed decisions.</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Finalize Deal -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="producerHeading4">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#producerCollapse4" aria-expanded="false" aria-controls="producerCollapse4">
+                            Step 4: Sign LOI and Complete Deal
+                        </button>
+                    </h2>
+                    <div id="producerCollapse4" class="accordion-collapse collapse" aria-labelledby="producerHeading4" data-bs-parent="#producerAccordion">
+                        <div class="accordion-body">
+                            <p>When you accept an offer, an LOI (Letter of Intent) is automatically generated:</p>
+                            <ul>
+                                <li>Review the auto-generated LOI document</li>
+                                <li>Sign the LOI to formalize the agreement</li>
+                                <li>Access all LOIs from <strong>LOI Documents</strong> in the menu</li>
+                            </ul>
+                            <p class="mb-0"><em>The LOI protects both parties and ensures a transparent transaction.</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- For Buyers -->
+        <section class="mb-5">
+            <h2 class="mb-3">🛒 For Buyers</h2>
+
+            <div class="accordion" id="buyerAccordion">
+                <!-- Step 1: Complete Onboarding -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="buyerHeading1">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#buyerCollapse1" aria-expanded="true" aria-controls="buyerCollapse1">
+                            Step 1: Complete Your Onboarding
+                        </button>
+                    </h2>
+                    <div id="buyerCollapse1" class="accordion-collapse collapse show" aria-labelledby="buyerHeading1" data-bs-parent="#buyerAccordion">
+                        <div class="accordion-body">
+                            <p>After signing up as a Buyer, complete your profile:</p>
+                            <ul>
+                                <li>Enter your company name</li>
+                                <li>Describe your business and content needs</li>
+                            </ul>
+                            <p class="mb-0"><em>This helps producers understand who they're working with.</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Browse Content -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="buyerHeading2">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#buyerCollapse2" aria-expanded="false" aria-controls="buyerCollapse2">
+                            Step 2: Browse and Search Content
+                        </button>
+                    </h2>
+                    <div id="buyerCollapse2" class="accordion-collapse collapse" aria-labelledby="buyerHeading2" data-bs-parent="#buyerAccordion">
+                        <div class="accordion-body">
+                            <p>Find the perfect content for your needs:</p>
+                            <ul>
+                                <li>Browse all content from <strong>Browse Content</strong></li>
+                                <li>Use search and filters to find specific content</li>
+                                <li>Click on content to view details</li>
+                                <li>Visit producer booths to see their portfolio</li>
+                            </ul>
+                            <p class="mb-0"><em>You can browse content even without logging in, but you'll need an account to make offers.</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Make Offers -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="buyerHeading3">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#buyerCollapse3" aria-expanded="false" aria-controls="buyerCollapse3">
+                            Step 3: Make an Offer
+                        </button>
+                    </h2>
+                    <div id="buyerCollapse3" class="accordion-collapse collapse" aria-labelledby="buyerHeading3" data-bs-parent="#buyerAccordion">
+                        <div class="accordion-body">
+                            <p>When you find content you want to purchase:</p>
+                            <ul>
+                                <li>Click <strong>Make Offer</strong> on the content detail page</li>
+                                <li>Fill in your offer details:
+                                    <ul>
+                                        <li>Offered price</li>
+                                        <li>Intended use of the content</li>
+                                        <li>Additional terms or requirements</li>
+                                    </ul>
+                                </li>
+                                <li>Submit your offer to the producer</li>
+                            </ul>
+                            <p class="mb-0"><em>Be clear and specific in your offer to increase chances of acceptance.</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Track Offers -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="buyerHeading4">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#buyerCollapse4" aria-expanded="false" aria-controls="buyerCollapse4">
+                            Step 4: Track Your Offers
+                        </button>
+                    </h2>
+                    <div id="buyerCollapse4" class="accordion-collapse collapse" aria-labelledby="buyerHeading4" data-bs-parent="#buyerAccordion">
+                        <div class="accordion-body">
+                            <p>Monitor all your offers from <strong>My Offers</strong>:</p>
+                            <ul>
+                                <li>View offer status (Pending, Accepted, Rejected)</li>
+                                <li>When accepted, sign the LOI document</li>
+                                <li>Access all agreements from <strong>LOI Documents</strong></li>
+                            </ul>
+                            <p class="mb-0"><em>Keep track of all your negotiations in one place.</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Features -->
+        <section class="mb-5">
+            <h2 class="mb-3">🌟 Key Features</h2>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">🔍 Advanced Search</h5>
+                            <p class="card-text">
+                                Use filters to find exactly what you're looking for - by category, price range, producer, and more.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">🤝 Transparent Offers</h5>
+                            <p class="card-text">
+                                All offers are structured and documented, ensuring both parties understand the terms clearly.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">📄 Auto-Generated LOI</h5>
+                            <p class="card-text">
+                                When an offer is accepted, we automatically generate a Letter of Intent to formalize the agreement.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">🏪 Producer Booths</h5>
+                            <p class="card-text">
+                                Each producer has their own booth showcasing all their content in one place.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="mb-5">
+            <h2 class="mb-3">❓ Frequently Asked Questions</h2>
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeading1">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse1" aria-expanded="false" aria-controls="faqCollapse1">
+                            Can I be both a Producer and a Buyer?
+                        </button>
+                    </h2>
+                    <div id="faqCollapse1" class="accordion-collapse collapse" aria-labelledby="faqHeading1" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Currently, each account can only have one role (Producer or Buyer). If you need both functions, you'll need to create separate accounts.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeading2">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse2" aria-expanded="false" aria-controls="faqCollapse2">
+                            How do I know if my offer was accepted?
+                        </button>
+                    </h2>
+                    <div id="faqCollapse2" class="accordion-collapse collapse" aria-labelledby="faqHeading2" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            You can check the status of all your offers in "My Offers". When an offer is accepted, the status will change and you'll be able to sign the LOI.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeading3">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse3" aria-expanded="false" aria-controls="faqCollapse3">
+                            What is an LOI?
+                        </button>
+                    </h2>
+                    <div id="faqCollapse3" class="accordion-collapse collapse" aria-labelledby="faqHeading3" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            LOI stands for Letter of Intent. It's a formal document that outlines the terms of the deal between the buyer and producer. ShortDeal automatically generates this document when an offer is accepted.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeading4">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse4" aria-expanded="false" aria-controls="faqCollapse4">
+                            Can I edit my content after uploading?
+                        </button>
+                    </h2>
+                    <div id="faqCollapse4" class="accordion-collapse collapse" aria-labelledby="faqHeading4" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes! Producers can edit their content details at any time from the "My Content" section. You can update the title, description, thumbnail, and other information.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Get Started CTA -->
+        <section class="text-center py-5 rounded-lg mb-4" style="background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: white;">
+            <h2 class="mb-3">Ready to Get Started?</h2>
+            <p class="lead mb-4">Join ShortDeal today and start trading short-form content!</p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'contents:browse' %}" class="btn btn-light btn-lg">Browse Content</a>
+            {% else %}
+                <a href="{% url 'accounts:signup' %}" class="btn btn-light btn-lg me-3">Sign Up</a>
+                <a href="{% url 'accounts:login' %}" class="btn btn-outline-light btn-lg">Sign In</a>
+            {% endif %}
+        </section>
+    </div>
+</div>
+{% endblock %}

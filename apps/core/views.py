@@ -72,3 +72,11 @@ def admin_dashboard_view(request):
         'recent_contents': recent_contents,
         'recent_offers': recent_offers,
     })
+
+
+def tutorial_view(request):
+    """
+    Tutorial page view
+    Shows how to use the ShortDeal platform
+    """
+    return render(request, 'tutorial.html')
