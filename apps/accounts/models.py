@@ -6,7 +6,7 @@ class User(AbstractUser):
     """Custom user model - Creator/Buyer/Admin role distinction"""
 
     class Role(models.TextChoices):
-        CREATOR = 'creator', 'Creator'
+        CREATOR = 'creator', 'Producer'
         BUYER = 'buyer', 'Buyer'
         ADMIN = 'admin', 'Admin'
 

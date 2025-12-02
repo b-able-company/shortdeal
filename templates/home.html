@@ -8,31 +8,31 @@
     <div class="row align-items-center">
         <div class="col-lg-6">
             <h1 class="display-3 fw-bold mb-4">
-                <span style="color: #007bff;">Short-form</span> Content Trading Platform
+                <span style="color: #ff6b6b;">Short-form</span> Content Trading Platform
             </h1>
             <p class="lead text-muted mb-4">
-                A safe and transparent short-form content marketplace connecting creators and buyers.
+                A safe and transparent short-form content marketplace connecting producers and buyers.
             </p>
             
             {% if user.is_authenticated %}
                 <p class="mb-4">
-                    Welcome, <strong>{{ user.username }}</strong>! 
+                    Welcome, <strong>{{ user.username }}</strong>!
                     {% if user.get_role_display %}
                         <span class="badge bg-primary">{{ user.get_role_display }}</span>
                     {% endif %}
                 </p>
-                <a href="{% url 'admin:index' %}" class="btn btn-primary btn-lg me-3">
-                    Go to Dashboard
+                <a href="{% url 'contents:browse' %}" class="btn btn-primary btn-lg me-3">
+                    Hot Content
                 </a>
-                <a href="#" class="btn btn-outline-primary btn-lg">
+                <a href="{% url 'core:tutorial' %}" class="btn btn-outline-primary btn-lg">
                     View Tutorial
                 </a>
             {% else %}
                 <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-lg me-3">
                     Sign In
                 </a>
-                <a href="{% url 'accounts:signup' %}" class="btn btn-outline-primary btn-lg">
-                    Sign Up
+                <a href="{% url 'core:tutorial' %}" class="btn btn-outline-primary btn-lg">
+                    View Tutorial
                 </a>
             {% endif %}
         </div>
@@ -63,7 +63,7 @@
             <div class="card booth-card h-100">
                 <div class="card-body">
                     <div style="font-size: 2.5rem; margin-bottom: 1rem;">🎥</div>
-                    <h5 class="card-title">For Creators</h5>
+                    <h5 class="card-title">For Producers</h5>
                     <p class="card-text">
                         Easily upload your short-form content and sell to interested buyers.
                     </p>
@@ -134,7 +134,7 @@
                 margin: 0 auto 1rem;
             ">1</div>
             <h5>Create Account</h5>
-            <p class="small">Sign up as a creator or buyer</p>
+            <p class="small">Sign up as a producer or buyer</p>
         </div>
         <div class="col-md-3 text-center mb-4">
             <div style="

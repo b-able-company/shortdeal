@@ -25,7 +25,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     )
     role = serializers.ChoiceField(
         choices=[
-            (User.Role.CREATOR, 'Creator'),
+            (User.Role.CREATOR, 'Producer'),
             (User.Role.BUYER, 'Buyer'),
         ],
         required=True
