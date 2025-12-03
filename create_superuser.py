@@ -22,11 +22,17 @@ if not password:
     exit(1)
 
 if User.objects.filter(username=username).exists():
-    print(f"Superuser '{username}' already exists")
+    print(f"Superuser '{username}' already exists, updating role to admin...")
+    user = User.objects.get(username=username)
+    user.role = 'admin'
+    user.save()
+    print(f"Superuser '{username}' role updated to admin")
 else:
-    User.objects.create_superuser(
+    user = User.objects.create_superuser(
         username=username,
         email=email,
         password=password
     )
-    print(f"Superuser '{username}' created successfully")
+    user.role = 'admin'
+    user.save()
+    print(f"Superuser '{username}' created successfully with admin role")
