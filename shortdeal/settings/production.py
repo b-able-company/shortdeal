@@ -46,7 +46,9 @@ X_FRAME_OPTIONS = 'DENY'
 # SECURE_HSTS_PRELOAD = True
 
 # Static files with WhiteNoise
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# Use CompressedStaticFilesStorage instead of CompressedManifestStaticFilesStorage
+# to avoid errors with missing source map files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Email configuration
 EMAIL_BACKEND = os.getenv(

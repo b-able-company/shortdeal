@@ -9,7 +9,8 @@
       "Bash(docker-compose rm:*)",
       "Bash(docker volume rm:*)",
       "Bash(timeout 10 uv run:*)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []
