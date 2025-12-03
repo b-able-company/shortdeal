@@ -18,9 +18,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project
 COPY . .
 
-# Collect static files
-RUN python manage.py collectstatic --noinput --settings=shortdeal.settings.local || true
+# Collect static files (use production settings for Railway)
+RUN python manage.py collectstatic --noinput --settings=shortdeal.settings.production || true
 
 EXPOSE 8000
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Use gunicorn for production, bind to Railway's $PORT
+CMD gunicorn shortdeal.wsgi:application --bind 0.0.0.0:${PORT:-8000}
