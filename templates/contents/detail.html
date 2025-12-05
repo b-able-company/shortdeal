@@ -59,33 +59,27 @@
                             <small class="text-muted">Views:</small>
                             <p class="mb-0">{{ content.view_count }}</p>
                         </div>
-
-                        <!-- Content Link (CNT-003) -->
-                        {% if content.video_url %}
-                        <div class="mb-3">
-                            <a href="{{ content.video_url }}" target="_blank" class="btn btn-outline-primary">
-                                <i class="bi bi-play-circle"></i> Watch Preview
-                            </a>
-                        </div>
-                        {% endif %}
                     </div>
                 </div>
 
-                <!-- Teaser Video (Full Width) -->
-                {% if content.teaser_video %}
-                <div class="mt-4">
-                    <h5>Teaser Video</h5>
-                    <video controls class="w-100 rounded" style="max-height: 500px;">
-                        <source src="{{ content.teaser_video.url }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-                {% endif %}
+                <!-- Synopsis and Teaser Video (Same Row) -->
+                <div class="row mt-4">
+                    <!-- Teaser Video Column -->
+                    {% if content.teaser_video %}
+                    <div class="col-md-6">
+                        <h5>Teaser Video</h5>
+                        <video controls class="w-100 rounded" style="max-height: 400px;">
+                            <source src="{{ content.teaser_video.url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    {% endif %}
 
-                <!-- Description/Synopsis (Full Width Below) -->
-                <div class="mt-4">
-                    <h5>Synopsis</h5>
-                    <p class="text-justify" style="white-space: pre-wrap;">{{ content.description }}</p>
+                    <!-- Synopsis Column -->
+                    <div class="{% if content.teaser_video %}col-md-6{% else %}col-12{% endif %}">
+                        <h5>Synopsis</h5>
+                        <p class="text-justify" style="white-space: pre-wrap;">{{ content.description }}</p>
+                    </div>
                 </div>
             </div>
         </div>
