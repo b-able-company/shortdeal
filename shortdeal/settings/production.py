@@ -66,6 +66,10 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 MEDIA_ROOT = os.getenv('MEDIA_ROOT', BASE_DIR / 'media')
 MEDIA_URL = '/media/'
 
+# File upload settings for large video files (teaser videos up to 200MB)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 250 * 1024 * 1024  # 250MB max total request size
+FILE_UPLOAD_MAX_MEMORY_SIZE = 250 * 1024 * 1024  # 250MB per file in memory
+
 # Email configuration
 EMAIL_BACKEND = os.getenv(
     'EMAIL_BACKEND',
