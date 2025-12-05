@@ -72,18 +72,6 @@
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="video_url" class="form-label">Content Link <span class="text-danger">*</span></label>
-                        <input type="url" class="form-control" id="video_url" name="video_url" value="{{ content.video_url }}" required>
-                        <small class="text-muted">External link</small>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="screener_url" class="form-label">Screener URL</label>
-                        <input type="url" class="form-control" id="screener_url" name="screener_url" value="{{ content.screener_url|default:'' }}">
-                        <small class="text-muted">Internal screener video with watermark</small>
-                    </div>
-
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="duration_seconds" class="form-label">Duration (seconds) <span class="text-danger">*</span></label>
