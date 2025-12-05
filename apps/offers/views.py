@@ -37,6 +37,13 @@ def offer_create_view(request, content_id):
         status=OFFER_STATUS_ACCEPTED
     ).exists()
 
+    # Check for existing pending offer from this buyer (OFR-006)
+    existing_offer = Offer.objects.filter(
+        content=content,
+        buyer=request.user,
+        status=OFFER_STATUS_PENDING
+    ).first()
+
     if request.method == 'POST':
         if has_accepted_offer:
             messages.error(
@@ -44,6 +51,14 @@ def offer_create_view(request, content_id):
                 'This content already has an accepted offer and is no longer available.'
             )
             return redirect('contents:detail', content_id=content_id)
+
+        if existing_offer:
+            messages.error(
+                request,
+                'You already have a pending offer for this content. '
+                'Please wait for the producer\'s response.'
+            )
+            return redirect('offers:buyer_detail', offer_id=existing_offer.id)
 
         # Get form data
         offered_price = request.POST.get('offered_price')
@@ -103,6 +118,7 @@ def offer_create_view(request, content_id):
     context = {
         'content': content,
         'has_accepted_offer': has_accepted_offer,
+        'existing_offer': existing_offer,
         'validity_choices': [
             {'days': 7, 'label': '7 days'},
             {'days': 14, 'label': '14 days'},

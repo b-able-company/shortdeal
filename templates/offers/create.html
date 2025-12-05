@@ -53,6 +53,21 @@
                 This content already has an accepted offer and is no longer available for new offers.
             </p>
         </div>
+        {% elif existing_offer %}
+        <div class="alert alert-info">
+            <h5 class="alert-heading">
+                <i class="bi bi-info-circle"></i> Existing Offer
+            </h5>
+            <p class="mb-2">
+                You already have a pending offer for this content
+                (submitted on {{ existing_offer.created_at|date:"Y-m-d" }}).
+            </p>
+            <p class="mb-0">
+                <a href="{% url 'offers:buyer_detail' existing_offer.id %}" class="btn btn-primary btn-sm">
+                    View Your Offer
+                </a>
+            </p>
+        </div>
         {% else %}
 
         <!-- Offer Form (OFR-001~005) -->
