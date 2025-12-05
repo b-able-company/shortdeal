@@ -17,7 +17,7 @@ class ContentPublicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Content
         fields = (
-            'id', 'title', 'description', 'poster', 'rating',
+            'id', 'title', 'description', 'poster', 'teaser_video', 'rating',
             'genre_tags', 'price', 'currency', 'duration_seconds',
             'release_target', 'view_count', 'created_at',
             'producer_name', 'producer_username', 'booth_slug'
@@ -35,7 +35,7 @@ class ContentDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Content
         fields = (
-            'id', 'title', 'description', 'poster', 'rating',
+            'id', 'title', 'description', 'poster', 'teaser_video', 'rating',
             'genre_tags', 'price', 'currency', 'duration_seconds',
             'video_url', 'screener_url', 'release_target',
             'view_count', 'created_at', 'updated_at',
@@ -50,7 +50,7 @@ class ContentProducerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Content
         fields = (
-            'id', 'title', 'description', 'poster', 'rating',
+            'id', 'title', 'description', 'poster', 'teaser_video', 'rating',
             'genre_tags', 'price', 'currency', 'duration_seconds',
             'video_url', 'screener_url', 'release_target',
             'status', 'view_count', 'created_at', 'updated_at'
@@ -86,7 +86,7 @@ class ContentCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Content
         fields = (
-            'title', 'description', 'poster', 'rating',
+            'title', 'description', 'poster', 'teaser_video', 'rating',
             'genre_tags', 'price', 'currency', 'duration_seconds',
             'video_url', 'screener_url', 'release_target', 'status'
         )

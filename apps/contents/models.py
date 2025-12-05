@@ -43,6 +43,13 @@ class Content(models.Model):
         verbose_name='Poster',
         help_text='Vertical poster image for content'
     )
+    teaser_video = models.FileField(
+        upload_to='teasers/',
+        blank=True,
+        null=True,
+        verbose_name='Teaser video',
+        help_text='Short teaser/trailer video file'
+    )
 
     # Genre tags (1-3 required, using ArrayField for PostgreSQL)
     genre_tags = ArrayField(

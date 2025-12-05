@@ -71,6 +71,17 @@
                     </div>
                 </div>
 
+                <!-- Teaser Video (Full Width) -->
+                {% if content.teaser_video %}
+                <div class="mt-4">
+                    <h5>Teaser Video</h5>
+                    <video controls class="w-100 rounded" style="max-height: 500px;">
+                        <source src="{{ content.teaser_video.url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                {% endif %}
+
                 <!-- Description/Synopsis (Full Width Below) -->
                 <div class="mt-4">
                     <h5>Synopsis</h5>
