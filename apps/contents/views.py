@@ -256,8 +256,9 @@ def studio_content_create_view(request):
         except (ValueError, TypeError):
             errors.append('Please enter a valid price.')
 
-        if not video_url:
-            errors.append('Content link is required.')
+        # video_url is optional (teaser_video can be used instead)
+        # if not video_url:
+        #     errors.append('Content link is required.')
 
         try:
             duration_seconds = int(duration_seconds)
@@ -381,8 +382,9 @@ def studio_content_edit_view(request, content_id):
             except (ValueError, TypeError):
                 errors.append('Please enter a valid price.')
 
-            if not video_url:
-                errors.append('Content link is required.')
+            # video_url is optional (teaser_video can be used instead)
+            # if not video_url:
+            #     errors.append('Content link is required.')
 
             try:
                 duration_seconds = int(duration_seconds)
