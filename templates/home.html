@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %}Home - ShortDeal{% endblock %}
 
 {% block content %}
@@ -37,18 +39,8 @@
             {% endif %}
         </div>
         <div class="col-lg-6 d-none d-lg-block text-center">
-            <div style="
-                background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-                border-radius: 12px;
-                height: 300px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: white;
-                font-size: 4rem;
-            ">
-                🎬
-            </div>
+            <img src="{% static 'img/posters.png' %}" alt="ShortDeal branding" class="img-fluid rounded-4 shadow-sm"
+                 style="max-height: 400px; object-fit: contain;">
         </div>
     </div>
 </div>
