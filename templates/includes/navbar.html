@@ -20,23 +20,35 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'contents:studio_list' %}">My Content</a>
                         </li>
+                        <!-- HIDDEN: Offer/LOI feature -->
+                        <!--
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'offers:producer_list' %}">Received Offers</a>
                         </li>
+                        -->
+                        <!-- END HIDDEN -->
                     {% endif %}
 
                     <!-- Buyer specific menu -->
                     {% if user.role == 'buyer' %}
+                        <!-- HIDDEN: Offer/LOI feature -->
+                        <!--
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'offers:buyer_list' %}">My Offers</a>
                         </li>
+                        -->
+                        <!-- END HIDDEN -->
                     {% endif %}
 
                     <!-- Common authenticated menu (Producer & Buyer only) -->
                     {% if user.role == 'creator' or user.role == 'buyer' %}
+                        <!-- HIDDEN: Offer/LOI feature -->
+                        <!--
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'loi:list' %}">LOI Documents</a>
                         </li>
+                        -->
+                        <!-- END HIDDEN -->
                     {% endif %}
 
                     <!-- Admin menu -->

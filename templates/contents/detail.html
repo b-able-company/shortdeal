@@ -129,7 +129,9 @@
             </div>
         </div>
 
-        <!-- Submit Offer Button (CNT-004) -->
+        <!-- HIDDEN: Offer/LOI feature -->
+        <!--
+        Submit Offer Button (CNT-004)
         <div class="card">
             <div class="card-body">
                 {% if user.is_authenticated %}
@@ -150,7 +152,7 @@
                         </div>
                     {% endif %}
                 {% else %}
-                    <!-- Not logged in (CNT-004) -->
+                    Not logged in (CNT-004)
                     <a href="{% url 'accounts:login' %}?next={{ request.path }}"
                        class="btn btn-primary w-100 btn-lg">
                         <i class="bi bi-box-arrow-in-right"></i> Login to Submit Offer
@@ -161,6 +163,8 @@
                 {% endif %}
             </div>
         </div>
+        -->
+        <!-- END HIDDEN -->
     </div>
 </div>
 
