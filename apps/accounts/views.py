@@ -226,8 +226,14 @@ def password_reset_request_view(request):
                 # Send email (with error handling)
                 try:
                     send_password_reset_email(user, reset_url)
+                    print(f"✓ Password reset email sent to {email}")
                     logger.info(f"Password reset email sent to {email}")
                 except Exception as e:
+                    print(f"✗ FAILED to send password reset email to {email}")
+                    print(f"✗ Error: {str(e)}")
+                    print(f"✗ Error type: {type(e).__name__}")
+                    import traceback
+                    print(traceback.format_exc())
                     logger.error(f"Failed to send password reset email to {email}: {str(e)}")
                     # Don't raise - still show success message to user
 
